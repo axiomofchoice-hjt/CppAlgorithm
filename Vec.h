@@ -91,7 +91,6 @@ class Vec {
     }
 
     virtual ~Vec() {
-        cout << "del " << endl;
         if (_pointer != nullptr) {
             for (size_t i = 0; i < _size; i++) _pointer[i].~Type();
             delete[](char *) _pointer;
@@ -144,6 +143,7 @@ class Vec {
         }
         _size = _new_size;
     }
+
     void assign(size_t _new_size, const Type &_value) {
         if (_capacity * 2 < _new_size) {
             _recapacity(_new_size);
@@ -159,6 +159,7 @@ class Vec {
         }
         _size = _new_size;
     }
+
     void clear() {
         for (size_t i = 0; i < _size; i++) {
             _pointer[i].~Type();
