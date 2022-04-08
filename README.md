@@ -12,6 +12,8 @@
 
 模仿 Rust 的 Vec（类似 C++ 的 vector），移动必须显式调用 `std::move`，拷贝必须用 clone 方法。
 
+实现了 IterMut 迭代器类，支持 Rust 迭代器的 next 方法。
+
 ## Deque
 
 不同于 C++ 的 deque，该 Deque 使用循环队列存储，空间不够时申请两倍空间。
