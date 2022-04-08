@@ -71,6 +71,14 @@ int main() {
         }
         cout << endl;
     }
+    {
+        int cnt = 0;
+        for (auto i : collect<vector<int>>(TakeIter(RangeIter(1, 12), 3))) {
+            cout << i << ' ';
+            cnt++;
+        }
+        cout << endl;
+    }
     // cout << *c.next().value() << endl;
     // cout << *c.next().value() << endl;
     // cout << *c.next().value() << endl;

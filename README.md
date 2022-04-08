@@ -10,7 +10,7 @@
 
 ## Iter
 
-模仿 Rust，实现了 range 迭代器和 map, filter, zip, step_by, enumerate, take 等功能
+模仿 Rust，实现了 range 迭代器和 collect, map, filter, zip, step_by, enumerate, take 等功能。
 
 ## Vec
 

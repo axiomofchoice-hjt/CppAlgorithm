@@ -209,6 +209,15 @@ class TakeIter {
     }
 };
 
+template <class Container, class Iter>
+Container collect(Iter iter) {
+    Container container;
+    for (std::optional<typename Iter::result_type> i = iter.next(); i.has_value(); i = iter.next()) {
+        container.push_back(i.value());
+    }
+    return std::move(container);
+}
+
 template <class Iter>
 class RangeIter {
    private:
