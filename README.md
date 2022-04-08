@@ -1,6 +1,8 @@
 # CppAlgorithm
 
-随手写的 C++ STL 以及一些算法的汇总
+（还在完善中）
+
+随手写的 C++ STL 以及一些算法的汇总。
 
 ## BaseType
 
