@@ -6,8 +6,8 @@ using std::cout;
 using std::endl;
 
 void (*tests[])() = {[] {
-    Vec<Vec<i32>> a; a.name = "a";
-    Vec<i32> b; b.name = "b";
+    Vec<Vec<i32>> a;
+    Vec<i32> b;
     cout << a << endl;
     cout << b << endl;
     b.push_back(1);

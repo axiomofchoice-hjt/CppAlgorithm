@@ -1,40 +1,44 @@
-#ifndef VEC_H
-#define VEC_H
+#ifndef DEQUE_H
+#define DEQUE_H
 
 #include <algorithm>
 #include <iostream>
 
-using std::cout;
-using std::endl;
-
 template <class Type>
-class Vec {
+class Deque {
    private:
     Type *_pointer;
-    size_t _size, _capacity;
+    size_t _begin, _size, _capacity;
+
+    size_t getIndex(size_t i) const {
+        return _begin + i < _capacity ? _begin + i : _begin + i - _capacity;
+    }
 
     void _recapacity(size_t _new_capacity) {
         Type *_new_pointer =
             reinterpret_cast<Type *>(new char[_new_capacity * sizeof(Type)]);
 
         for (size_t i = 0; i < _size; i++) {
-            _new_pointer[i] = std::move(_pointer[i]);
+            _new_pointer[i] = std::move(_pointer[getIndex(i)]);
         }
         if (_pointer != nullptr) {
             delete[] reinterpret_cast<Type *>(_pointer);
         }
-
         _pointer = _new_pointer;
         _capacity = _new_capacity;
+        _begin = 0;
     }
 
-    Vec(Type *_pointer, size_t _size, size_t _capacity)
-        : _pointer(_pointer), _size(_size), _capacity(_capacity) {}
+    Deque(Type *_pointer, size_t _begin, size_t _size, size_t _capacity)
+        : _pointer(_pointer),
+          _begin(_begin),
+          _size(_size),
+          _capacity(_capacity) {}
 
     void deconstruct() {
         if (_pointer != nullptr) {
             for (size_t i = 0; i < _size; i++) {
-                _pointer[i].~Type();
+                _pointer[getIndex(i)].~Type();
             }
             delete[] reinterpret_cast<Type *>(_pointer);
         }
@@ -42,66 +46,86 @@ class Vec {
 
     void moved() {
         _pointer = nullptr;
-        _size = _capacity = 0;
+        _begin = _size = _capacity = 0;
     }
 
    public:
     using type_value = Type;
 
-    Vec() : _pointer(nullptr), _size(0), _capacity(0) {}
+    Deque() : _pointer(nullptr), _begin(0), _size(0), _capacity(0) {}
 
-    Vec(Vec<Type> &&_other)
+    Deque(Deque<Type> &&_other)
         : _pointer(_other._pointer),
+          _begin(_other._begin),
           _size(_other._size),
           _capacity(_other._capacity) {
         _other.moved();
     }
 
-    Vec<Type> &operator=(Vec<Type> &&_other) {
+    Deque<Type> &operator=(Deque<Type> &&_other) {
         deconstruct();
         _pointer = _other._pointer;
+        _begin = _other._begin;
         _size = _other._size;
         _capacity = _other._capacity;
         _other.moved();
         return *this;
     }
 
-    Vec<Type> clone() const {
-        Vec<Type> new_vec;
-        new_vec._recapacity(_size);
+    Deque<Type> clone() const {
+        Deque<Type> new_Deque;
+        new_Deque._recapacity(_size);
         for (size_t i = 0; i < _size; i++) {
-            new_vec[i] = _pointer[i].clone();
+            new_Deque[i] = _pointer[getIndex(i)].clone();
         }
-        new_vec._size = _size;
-        return std::move(new_vec);
+        new_Deque._size = _size;
+        return std::move(new_Deque);
     }
 
-    virtual ~Vec() { deconstruct(); }
+    virtual ~Deque() { deconstruct(); }
 
     template <class T>
     void push_back(T &&_value) {
         if (_size == _capacity) {
             _recapacity(std::max(_capacity * 2, static_cast<size_t>(1)));
         }
-        new (_pointer + _size) Type(std::forward<Type>(_value));
+        new (_pointer + getIndex(_size)) Type(std::forward<Type>(_value));
         _size++;
     }
 
     void pop_back() {
         _size--;
-        _pointer[size].~Type();
+        _pointer[getIndex(_size)].~Type();
+    }
+
+    template <class T>
+    void push_front(T &&_value) {
+        if (_size == _capacity) {
+            _recapacity(std::max(_capacity * 2, static_cast<size_t>(1)));
+        }
+        _begin = getIndex(_capacity - 1);
+        new (_pointer + _begin) Type(std::forward<Type>(_value));
+        _size++;
+    }
+
+    void pop_front() {
+        _size--;
+        _pointer[_begin].~Type();
+        _begin = getIndex(1);
     }
 
     size_t size() const { return _size; }
 
-    Type &operator[](size_t _index) { return _pointer[_index]; }
+    Type &operator[](size_t _index) { return _pointer[getIndex(_index)]; }
 
-    const Type &operator[](size_t _index) const { return _pointer[_index]; }
+    const Type &operator[](size_t _index) const {
+        return _pointer[getIndex(_index)];
+    }
 
-    friend std::ostream &operator<<(std::ostream &cout, const Vec<Type> &v) {
+    friend std::ostream &operator<<(std::ostream &cout, const Deque<Type> &v) {
         cout << "[";
         for (size_t i = 0; i < v._size; i++) {
-            cout << v._pointer[i];
+            cout << v._pointer[v.getIndex(i)];
             if (i != v._size - 1) cout << ", ";
         }
         cout << "]";
@@ -114,7 +138,7 @@ class Vec {
         }
 
         for (size_t i = _size; i < _new_size; i++) {
-            new (_pointer + i) Type(_value.clone());
+            new (_pointer + getIndex(i)) Type(_value.clone());
         }
         _size = _new_size;
     }
@@ -125,29 +149,22 @@ class Vec {
         }
 
         for (size_t i = 0; i < _size; i++) {
-            _pointer[i].~Type();
+            _pointer[getIndex(i)].~Type();
         }
         for (size_t i = 0; i < _new_size; i++) {
             new (_pointer + i) Type(_value.clone());
         }
+        _begin = 0;
         _size = _new_size;
     }
 
     void clear() {
         for (size_t i = 0; i < _size; i++) {
-            _pointer[i].~Type();
+            _pointer[getIndex(i)].~Type();
         }
+        _begin = 0;
         _size = 0;
     }
-
-    friend Type *begin(Vec<Type> &v) { return v._pointer; }
-    friend const Type *begin(const Vec<Type> &v) { return v._pointer; }
-    friend const Type *end(Vec<Type> &v) { return v._pointer + v._size; }
-    friend Type *end(const Vec<Type> &v) { return v._pointer + v._size; }
-    Type *begin() { return _pointer; }
-    const Type *begin() const { return _pointer; }
-    const Type *end() { return _pointer + _size; }
-    Type *end() const { return _pointer + _size; }
 };
 
 #endif

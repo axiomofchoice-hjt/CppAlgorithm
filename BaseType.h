@@ -1,5 +1,5 @@
-#ifndef AXIOMOFCHOICE_BASETYPE_H
-#define AXIOMOFCHOICE_BASETYPE_H
+#ifndef BASETYPE_H
+#define BASETYPE_H
 
 #include <stdint.h>
 

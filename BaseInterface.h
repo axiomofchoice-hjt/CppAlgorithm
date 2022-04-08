@@ -1,5 +1,5 @@
-#ifndef AXIOMOFCHOICE_BASEINTERFACE_H
-#define AXIOMOFCHOICE_BASEINTERFACE_H
+#ifndef BASEINTERFACE_H
+#define BASEINTERFACE_H
 
 template <class Type, class Derive>
 class Clone {
