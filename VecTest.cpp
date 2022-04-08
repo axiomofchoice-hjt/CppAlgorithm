@@ -1,7 +1,9 @@
-#include <iostream>
 #include <assert.h>
-#include "Vec.h"
+
+#include <iostream>
+
 #include "BaseType.h"
+#include "Vec.h"
 using std::cout;
 using std::endl;
 
@@ -36,6 +38,10 @@ void (*tests[])() = {[] {
     }
     a.clear();
     cout << a.size() << endl;
+    auto it = b.iter_mut();
+    for (auto i = it.next(); i.has_value(); i = it.next()) {
+        cout << *i.value() << endl;
+    }
 }};
 
 int main() {

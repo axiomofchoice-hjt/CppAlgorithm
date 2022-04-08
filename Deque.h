@@ -22,7 +22,7 @@ class Deque {
             _new_pointer[i] = std::move(_pointer[getIndex(i)]);
         }
         if (_pointer != nullptr) {
-            delete[] reinterpret_cast<Type *>(_pointer);
+            delete[] reinterpret_cast<char *>(_pointer);
         }
         _pointer = _new_pointer;
         _capacity = _new_capacity;
@@ -40,7 +40,7 @@ class Deque {
             for (size_t i = 0; i < _size; i++) {
                 _pointer[getIndex(i)].~Type();
             }
-            delete[] reinterpret_cast<Type *>(_pointer);
+            delete[] reinterpret_cast<char *>(_pointer);
         }
     }
 

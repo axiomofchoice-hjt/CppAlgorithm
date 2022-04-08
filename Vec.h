@@ -3,6 +3,7 @@
 
 #include <algorithm>
 #include <iostream>
+#include <optional>
 
 using std::cout;
 using std::endl;
@@ -21,7 +22,7 @@ class Vec {
             _new_pointer[i] = std::move(_pointer[i]);
         }
         if (_pointer != nullptr) {
-            delete[] reinterpret_cast<Type *>(_pointer);
+            delete[] reinterpret_cast<char *>(_pointer);
         }
 
         _pointer = _new_pointer;
@@ -36,7 +37,7 @@ class Vec {
             for (size_t i = 0; i < _size; i++) {
                 _pointer[i].~Type();
             }
-            delete[] reinterpret_cast<Type *>(_pointer);
+            delete[] reinterpret_cast<char *>(_pointer);
         }
     }
 
@@ -140,14 +141,38 @@ class Vec {
         _size = 0;
     }
 
-    friend Type *begin(Vec<Type> &v) { return v._pointer; }
-    friend const Type *begin(const Vec<Type> &v) { return v._pointer; }
-    friend const Type *end(Vec<Type> &v) { return v._pointer + v._size; }
-    friend Type *end(const Vec<Type> &v) { return v._pointer + v._size; }
-    Type *begin() { return _pointer; }
-    const Type *begin() const { return _pointer; }
-    const Type *end() { return _pointer + _size; }
-    Type *end() const { return _pointer + _size; }
+    class IterMut {
+       private:
+        Type *_pointer;
+        Type *_end;
+        IterMut(Type *_pointer, Type *_end) : _pointer(_pointer), _end(_end) {}
+
+       public:
+        friend Vec<Type>;
+        std::optional<Type *> next() {
+            if (_pointer == _end) {
+                return std::nullopt;
+            } else {
+                Type *result = _pointer;
+                ++_pointer;
+                return std::make_optional<Type *>(result);
+            }
+        }
+
+        void operator++() { ++_pointer; }
+        bool operator!=(IterMut &other) const {
+            return _pointer != other._pointer;
+        }
+        Type &operator*() { return *_pointer; }
+    };
+
+    Vec<Type>::IterMut iter_mut() {
+        return IterMut(_pointer, _pointer + _size);
+    }
+    Vec<Type>::IterMut begin() { return IterMut(_pointer, _pointer + _size); }
+    Vec<Type>::IterMut end() {
+        return IterMut(_pointer + _size, _pointer + _size);
+    }
 };
 
 #endif
