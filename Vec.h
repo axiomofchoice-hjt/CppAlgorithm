@@ -16,13 +16,14 @@ class Vec {
     size_t _size, _capacity;
 
     void _recapacity(size_t _new_capacity) {
-        Type *_new_pointer = static_cast<Type *>(new char[_new_capacity * sizeof(Type)]);
+        Type *_new_pointer =
+            reinterpret_cast<Type *>(new char[_new_capacity * sizeof(Type)]);
 
         for (size_t i = 0; i < _size; i++) {
             _new_pointer[i] = std::move(_pointer[i]);
         }
         if (_pointer != nullptr) {
-            delete[](char *) _pointer;
+            delete[] reinterpret_cast<Type *>(_pointer);
         }
 
         _pointer = _new_pointer;
@@ -35,7 +36,7 @@ class Vec {
     void deconstruct() {
         if (_pointer != nullptr) {
             for (size_t i = 0; i < _size; i++) _pointer[i].~Type();
-            delete[](char *) _pointer;
+            delete[] reinterpret_cast<Type *>(_pointer);
         }
     }
 
@@ -93,7 +94,7 @@ class Vec {
     virtual ~Vec() {
         if (_pointer != nullptr) {
             for (size_t i = 0; i < _size; i++) _pointer[i].~Type();
-            delete[](char *) _pointer;
+            delete[] reinterpret_cast<Type *>(_pointer);
         }
     }
 
@@ -166,6 +167,17 @@ class Vec {
         }
         _size = 0;
     }
+
+    friend Type *begin(Vec<Type> &v) { return v._pointer; }
+    friend const Type *begin(const Vec<Type> &v) { return v._pointer; }
+    friend const Type *end(Vec<Type> &v) { return v._pointer + v._size; }
+    friend Type *end(const Vec<Type> &v) { return v._pointer + v._size; }
+    Type *begin() { return _pointer; }
+    const Type *begin() const { return _pointer; }
+    const Type *end() { return _pointer + _size; }
+    Type *end() const { return _pointer + _size; }
+
+    
 };
 
 #endif

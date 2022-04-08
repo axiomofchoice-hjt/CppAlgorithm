@@ -4,7 +4,9 @@
 template <class Type, class Derive>
 class Clone {
    public:
-    Derive clone() const { return Derive((static_cast<const Derive &>(*this))); }
+    Derive clone() const {
+        return Derive((static_cast<const Derive &>(*this)));
+    }
 };
 
 template <class Type, class Derive>
@@ -38,12 +40,14 @@ class Ord {
         return a.value() != b.value();
     }
 };
+
 #define UnaryOpt(Name, Opt)                                                   \
     template <class Type, class Derive>                                       \
     class Name {                                                              \
        public:                                                                \
         friend Derive operator Opt(const Derive &a) { return Opt a.value(); } \
     };
+
 #define BinaryOpt(Name, Opt)                                           \
     template <class Type, class Derive>                                \
     class Name {                                                       \
@@ -52,6 +56,7 @@ class Ord {
             return a.value() Opt b.value();                            \
         }                                                              \
     };
+
 #define BinaryOptAssign(Name, Opt)                                \
     template <class Type, class Derive>                           \
     class Name {                                                  \

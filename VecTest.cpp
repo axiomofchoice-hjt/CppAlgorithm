@@ -31,6 +31,9 @@ void (*tests[])() = {[] {
     assert(b[2] == 7);
     assert(b[3] == 8);
     assert(b[4] == 8);
+    for (auto i : b) {
+        cout << i << endl;
+    }
     a.clear();
     cout << a.size() << endl;
 }};
