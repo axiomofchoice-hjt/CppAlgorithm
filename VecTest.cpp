@@ -1,5 +1,6 @@
 #include <assert.h>
 
+#include <functional>
 #include <iostream>
 
 #include "BaseType.h"
@@ -33,14 +34,14 @@ void (*tests[])() = {[] {
     assert(b[2] == 7);
     assert(b[3] == 8);
     assert(b[4] == 8);
-    for (auto i : b) {
-        cout << i << endl;
+    for (auto i : Iterable(b.iter_mut())) {
+        cout << *i << endl;
     }
     a.clear();
     cout << a.size() << endl;
-    auto it = b.iter_mut();
+    auto it = MapIter(b.iter(), std::function([](const i32 *x) { return *x * 2; }));
     for (auto i = it.next(); i.has_value(); i = it.next()) {
-        cout << *i.value() << endl;
+        cout << i.value() << endl;
     }
 }};
 

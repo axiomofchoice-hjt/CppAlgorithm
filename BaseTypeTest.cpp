@@ -9,7 +9,8 @@ using std::endl;
 int main() {
     i32 a;
     a = 1;
-    a += i32(2);
+    a++;
+    ++a;
     assert(a == i32(3));
     assert(a.clone() == i32(3));
     assert(i32(5) + i32(7) == i32(12));
@@ -26,6 +27,7 @@ int main() {
     f64 b;
     b = 1.0;
     assert(b == f64(1.0));
+    cout << "test ok" << endl;
 
     return 0;
 }

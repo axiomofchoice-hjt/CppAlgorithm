@@ -5,6 +5,8 @@
 #include <iostream>
 #include <optional>
 
+#include "Iter.h"
+
 using std::cout;
 using std::endl;
 
@@ -141,37 +143,12 @@ class Vec {
         _size = 0;
     }
 
-    class IterMut {
-       private:
-        Type *_pointer;
-        Type *_end;
-        IterMut(Type *_pointer, Type *_end) : _pointer(_pointer), _end(_end) {}
-
-       public:
-        friend Vec<Type>;
-        std::optional<Type *> next() {
-            if (_pointer == _end) {
-                return std::nullopt;
-            } else {
-                Type *result = _pointer;
-                ++_pointer;
-                return std::make_optional<Type *>(result);
-            }
-        }
-
-        void operator++() { ++_pointer; }
-        bool operator!=(IterMut &other) const {
-            return _pointer != other._pointer;
-        }
-        Type &operator*() { return *_pointer; }
-    };
-
-    Vec<Type>::IterMut iter_mut() {
-        return IterMut(_pointer, _pointer + _size);
+    RangeIter<Type *> iter_mut() {
+        return RangeIter(_pointer, _pointer + _size);
     }
-    Vec<Type>::IterMut begin() { return IterMut(_pointer, _pointer + _size); }
-    Vec<Type>::IterMut end() {
-        return IterMut(_pointer + _size, _pointer + _size);
+
+    RangeIter<const Type *> iter() const {
+        return RangeIter<const Type *>(_pointer, _pointer + _size);
     }
 };
 

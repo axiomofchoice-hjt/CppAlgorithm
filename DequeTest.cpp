@@ -1,7 +1,9 @@
-#include <iostream>
 #include <assert.h>
-#include "Deque.h"
+
+#include <iostream>
+
 #include "BaseType.h"
+#include "Deque.h"
 using std::cout;
 using std::endl;
 
@@ -17,6 +19,11 @@ void (*tests[])() = {[] {
     assert(a[2] == 3);
     assert(a[3] == 1);
     assert(a[4] == 2);
+    for (auto i :
+         Iterable(MapIter(
+             a.iter(), std::function([](const i32 *x) { return *x * *x; })))) {
+        cout << i << ' ' << endl;
+    }
     cout << a << endl;
 }};
 

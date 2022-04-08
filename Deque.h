@@ -3,6 +3,9 @@
 
 #include <algorithm>
 #include <iostream>
+#include <optional>
+
+#include "Iter.h"
 
 template <class Type>
 class Deque {
@@ -164,6 +167,32 @@ class Deque {
         }
         _begin = 0;
         _size = 0;
+    }
+
+    ConcatIter<RangeIter<Type *>, RangeIter<Type *>> iter_mut() {
+        if (_begin + _size < _capacity) {
+            return ConcatIter(
+                RangeIter(_pointer + _begin, _pointer + _begin + _size),
+                RangeIter(_pointer, _pointer));
+        } else {
+            return ConcatIter(
+                RangeIter(_pointer + _begin, _pointer + _capacity),
+                RangeIter(_pointer, _pointer + _begin + _size - _capacity));
+        }
+    }
+
+    ConcatIter<RangeIter<const Type *>, RangeIter<const Type *>> iter() const {
+        if (_begin + _size < _capacity) {
+            return ConcatIter(RangeIter<const Type *>(
+                                  _pointer + _begin, _pointer + _begin + _size),
+                              RangeIter<const Type *>(_pointer, _pointer));
+        } else {
+            return ConcatIter(
+                RangeIter<const Type *>(_pointer + _begin,
+                                        _pointer + _capacity),
+                RangeIter<const Type *>(_pointer,
+                                        _pointer + _begin + _size - _capacity));
+        }
     }
 };
 

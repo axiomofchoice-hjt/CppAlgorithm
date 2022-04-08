@@ -11,6 +11,8 @@ template <class Type>
 class Integer : public Clone<Type, Integer<Type>>,
                 public Display<Type, Integer<Type>>,
                 public Ord<Type, Integer<Type>>,
+                public Inc<Type, Integer<Type>>,
+                public Dec<Type, Integer<Type>>,
                 public Pos<Type, Integer<Type>>,
                 public Neg<Type, Integer<Type>>,
                 public Add<Type, Integer<Type>>,
@@ -76,6 +78,7 @@ using u8 = Integer<uint8_t>;
 using u16 = Integer<uint16_t>;
 using u32 = Integer<uint32_t>;
 using u64 = Integer<uint64_t>;
+using usize = Integer<size_t>;
 
 using f32 = Float<float>;
 using f64 = Float<double>;

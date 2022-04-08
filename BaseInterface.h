@@ -41,6 +41,28 @@ class Ord {
     }
 };
 
+template <class Type, class Derive>
+class Inc {
+   public:
+    void operator++() {
+        static_cast<Derive &>(*this).value()++;
+    }
+    void operator++(int) {
+        static_cast<Derive &>(*this).value()++;
+    }
+};
+
+template <class Type, class Derive>
+class Dec {
+   public:
+    void operator--() {
+        static_cast<Derive &>(*this).value()--;
+    }
+    void operator--(int) {
+        static_cast<Derive &>(*this).value()--;
+    }
+};
+
 #define UnaryOpt(Name, Opt)                                                   \
     template <class Type, class Derive>                                       \
     class Name {                                                              \
