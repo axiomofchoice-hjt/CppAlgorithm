@@ -16,7 +16,7 @@ class Vec {
     size_t _size, _capacity;
 
     void _recapacity(size_t _new_capacity) {
-        Type *_new_pointer = (Type *)new char[_new_capacity * sizeof(Type)];
+        Type *_new_pointer = static_cast<Type *>(new char[_new_capacity * sizeof(Type)]);
 
         for (size_t i = 0; i < _size; i++) {
             _new_pointer[i] = std::move(_pointer[i]);
