@@ -101,11 +101,11 @@ class Vec {
 
     const Type &operator[](size_t _index) const { return _pointer[_index]; }
 
-    friend std::ostream &operator<<(std::ostream &cout, const Vec<Type> &v) {
+    friend std::ostream &operator<<(std::ostream &cout, const Vec<Type> &self) {
         cout << "[";
-        for (size_t i = 0; i < v._size; i++) {
-            cout << v._pointer[i];
-            if (i != v._size - 1) cout << ", ";
+        for (size_t i = 0; i < self._size; i++) {
+            cout << self._pointer[i];
+            if (i != self._size - 1) cout << ", ";
         }
         cout << "]";
         return cout;

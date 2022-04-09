@@ -111,4 +111,8 @@ BinaryOptAssign(BitAndAssign, &=);
 BinaryOptAssign(BitOrAssign, |=);
 BinaryOptAssign(BitXorAssign, ^=);
 
+#undef UnaryOpt
+#undef BinaryOpt
+#undef BinaryOptAssign
+
 #endif
