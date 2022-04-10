@@ -18,6 +18,8 @@
 
 模仿 Rust，实现了 range 迭代器和 collect, map, filter, zip, step_by, enumerate, take 等功能。
 
+ps: C++20 的 Ranges 库。
+
 ### Vec
 
 变长数组。
@@ -40,3 +42,16 @@ zkw 线段树，支持单点修改、区间查询。
 
 将两个整数合成一个大整数的想法。（因为不会除法的原理而失败）
 
+## 数学相关
+
+### StaticMatrix
+
+行数、列数是编译期常量的二维矩阵。
+
+实现了矩阵的几个最简单的功能。
+
+### Vector2
+
+二维向量。
+
+模仿 C# 的 Vector2。
